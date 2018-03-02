@@ -7,6 +7,7 @@ package crop;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
@@ -37,7 +38,8 @@ public class Transform {
 
             System.out.println("W:" + width + "\tH:" + height);
 
-            Image img2 = processing(img, new java.awt.Color(200, 200, 200));
+            Circle circle = new Circle(getCenter(width, height), getRadius(width, height));
+            Image img2 = processing(img, new java.awt.Color(200, 200, 200), circle);
 
             //write image
             try {
@@ -71,12 +73,37 @@ public class Transform {
     }
 
     /**
+     * Obtener centro de un cuadrado
      *
-     * @param im
-     * @param min_color
+     * @param width
+     * @param height
      * @return
      */
-    public static Image processing(Image im, final java.awt.Color min_color) {
+    public static Point getCenter(int width, int height) {
+        return new Point(width / 2, height / 2);
+    }
+
+    /**
+     * Calcular el radio aceptable para recorte
+     *
+     * @param width
+     * @param height
+     * @return
+     */
+    public static int getRadius(int width, int height) {
+        Point p = getCenter(width, height);
+        return p.x >= p.y ? p.y : p.x;
+    }
+
+    /**
+     * Aplica transparencia en imagen. Aplica redondeo a la foto
+     *
+     * @param im
+     * @param min_color Color minimo a detectar. Todos los colores por encima de
+     * este seran eliminados.
+     * @return
+     */
+    public static Image processing(Image im, final java.awt.Color min_color, Circle circle) {
         ImageFilter filter = new RGBImageFilter() {
             // the color we are looking for... Alpha bits are set to opaque
             public int markerRGB = min_color.getRGB() | 0xFF000000;
@@ -84,9 +111,10 @@ public class Transform {
             @Override
             public final int filterRGB(int x, int y, int rgb) {
                 java.awt.Color temp = new java.awt.Color(rgb);
-                if (temp.getRed() >= min_color.getRed()
+                if ((temp.getRed() >= min_color.getRed()
                         && temp.getBlue() >= min_color.getBlue()
-                        && temp.getGreen() >= min_color.getGreen()) {
+                        && temp.getGreen() >= min_color.getGreen())
+                        || !circle.contains(new Point(x, y))) {
                     return 0x00FFFFFF & rgb;
                 }
                 return rgb;
