@@ -1,0 +1,26 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package crop;
+
+import java.awt.Image;
+import java.awt.Point;
+
+/**
+ *
+ * @author jul.mora
+ */
+public class Data {
+
+    Image input, output;
+    Point center;
+
+    public Data(Image input, Image output, Point center) {
+        this.input = input;
+        this.output = output;
+        this.center = center;
+    }
+
+}

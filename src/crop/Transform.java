@@ -24,9 +24,44 @@ import javax.imageio.ImageIO;
  */
 public class Transform {
 
+    public static Data prepare(File f, Point center, boolean save, File dest) throws IOException {
+        BufferedImage img;
+        //read image
+        try {
+            img = ImageIO.read(f);
+
+            int width = img.getWidth();
+            int height = img.getHeight();
+
+            if (center == null) {
+                center = getCenter(width, height);
+            }
+
+            // System.out.println("W:" + width + "\tH:" + height);
+
+            Circle circle = new Circle(center, getRadius(width, height));
+            Image img2 = processing(img, new java.awt.Color(200, 200, 200), circle);
+
+            //write image
+            if (save) {
+                try {
+                    // f = new File("C:\\Users\\jul.mora\\Documents\\NetBeansProjects\\Crop\\src\\images\\paisa_sinfondo.png");
+                    ImageIO.write(toBufferedImage(img2), "png", dest);
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+            }
+            
+            return new Data(img, img2, center);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
     public static void main(String args[]) throws IOException {
-        BufferedImage img = null;
-        File f = null;
+        BufferedImage img;
+        File f;
 
         //read image
         try {
@@ -51,9 +86,7 @@ public class Transform {
         } catch (IOException e) {
             System.out.println(e);
         }
-
-        // some code goes here...
-    }//main() ends here
+    }
 
     public static BufferedImage toBufferedImage(Image img) {
         if (img instanceof BufferedImage) {
