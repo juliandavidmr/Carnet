@@ -5,19 +5,21 @@
  */
 package crop;
 
-import static crop.Transform.processing;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -34,6 +36,22 @@ public class main extends javax.swing.JFrame {
      */
     public main() {
         initComponents();
+
+        setDropTarget(new DropTarget() {
+            @Override
+            public synchronized void drop(DropTargetDropEvent evt) {
+                try {
+                    evt.acceptDrop(DnDConstants.ACTION_COPY);
+                    List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                    if (droppedFiles.size() > 0) {
+                        clean();
+                        f = droppedFiles.get(0);
+                        build(f);
+                    }
+                } catch (UnsupportedFlavorException | IOException ex) {
+                }
+            }
+        });
     }
 
     /**
@@ -211,24 +229,7 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_jt_center_yKeyReleased
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
-        try {
-            JFileChooser fc = new JFileChooser();
-            fc.showSaveDialog(this);
-            File f_dest = new File(fc.getSelectedFile().getPath() + ".png");
-
-            if (f_dest != null) {
-                // System.out.println("====>" + f_dest);
-                Transform.prepare(f, center, true, f_dest);
-                JOptionPane.showMessageDialog(null,
-                        "El archivo se guardó exitosamente en: \n " + f_dest,
-                        "Información",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-                clean();
-            }
-        } catch (IOException ex) {
-            // Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        save();
     }//GEN-LAST:event_saveActionPerformed
 
     private void jt_center_xKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_xKeyReleased
@@ -260,6 +261,27 @@ public class main extends javax.swing.JFrame {
         f = null;
         jt_center_x.setEnabled(false);
         jt_center_y.setEnabled(false);
+    }
+
+    public void save() {
+        try {
+            JFileChooser fc = new JFileChooser();
+            fc.showSaveDialog(this);
+            File f_dest = new File(fc.getSelectedFile().getPath() + ".png");
+
+            if (f_dest != null) {
+                // System.out.println("====>" + f_dest);
+                Transform.prepare(f, center, true, f_dest);
+                JOptionPane.showMessageDialog(null,
+                        "El archivo se guardó exitosamente en: \n " + f_dest,
+                        "Información",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                clean();
+            }
+        } catch (IOException ex) {
+            // Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void build(File file) {
