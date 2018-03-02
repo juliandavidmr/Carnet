@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
  */
 public class Transform {
 
-    public static Data prepare(File f, Point center, boolean save, File dest) throws IOException {
+    public static Data prepare(final File f, Point center, boolean save, File dest) throws IOException {
         BufferedImage img;
         //read image
         try {
@@ -44,11 +44,10 @@ public class Transform {
 
             //write image
             if (save) {
-                try {
-                    // f = new File("C:\\Users\\jul.mora\\Documents\\NetBeansProjects\\Crop\\src\\images\\paisa_sinfondo.png");
+                try {                    
                     ImageIO.write(toBufferedImage(img2), "png", dest);
                 } catch (IOException e) {
-                    System.out.println(e);
+                    System.err.println(e);
                 }
             }
             

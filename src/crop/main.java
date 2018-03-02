@@ -27,6 +27,7 @@ public class main extends javax.swing.JFrame {
 
     File f;
     private Point center;
+    boolean reset;
 
     /**
      * Creates new form main
@@ -46,19 +47,20 @@ public class main extends javax.swing.JFrame {
 
         jFileChooser1 = new javax.swing.JFileChooser();
         jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        tf_width = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        tf_width1 = new javax.swing.JTextField();
         label_photo = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         label_photo_res = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jt_center_x = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jt_center_y = new javax.swing.JTextField();
         save = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Foto carnet");
+        setResizable(false);
 
         jButton1.setText("Seleccionar foto");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -67,29 +69,17 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Ancho");
-
-        tf_width.setText("0");
-        tf_width.setToolTipText("");
-        tf_width.setEnabled(false);
-
-        jLabel2.setText("Alto");
-
-        tf_width1.setText("0");
-        tf_width1.setToolTipText("");
-        tf_width1.setEnabled(false);
-
         label_photo.setMaximumSize(new java.awt.Dimension(300, 300));
         label_photo.setMinimumSize(new java.awt.Dimension(400, 400));
 
         label_photo_res.setMaximumSize(new java.awt.Dimension(300, 300));
         label_photo_res.setMinimumSize(new java.awt.Dimension(400, 400));
 
-        jTextField1.setText("0");
-        jTextField1.setEnabled(false);
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField1KeyTyped(evt);
+        jt_center_x.setText("0");
+        jt_center_x.setEnabled(false);
+        jt_center_x.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jt_center_xKeyReleased(evt);
             }
         });
 
@@ -98,14 +88,8 @@ public class main extends javax.swing.JFrame {
         jt_center_y.setText("0");
         jt_center_y.setEnabled(false);
         jt_center_y.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jt_center_yKeyPressed(evt);
-            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jt_center_yKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jt_center_yKeyTyped(evt);
             }
         });
 
@@ -116,6 +100,40 @@ public class main extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Por"));
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel1MouseClicked(evt);
+            }
+        });
+
+        jLabel1.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setText("Universidad de la Amazonia");
+
+        jLabel2.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel2.setText("Departamento de Educación a Distancia");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,58 +143,46 @@ public class main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(label_photo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(label_photo_res, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tf_width)
-                                    .addComponent(tf_width1)))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jt_center_y, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(save)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jt_center_x, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jt_center_y)
+                            .addComponent(save, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(label_photo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(label_photo_res, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 5, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label_photo, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
-                    .addComponent(label_photo_res, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(label_photo_res, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                    .addComponent(label_photo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jt_center_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tf_width, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(tf_width1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(save))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(save))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jt_center_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jt_center_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -189,25 +195,8 @@ public class main extends javax.swing.JFrame {
         final JFileChooser fc = new JFileChooser();
         fc.showOpenDialog(this);
         f = fc.getSelectedFile();
-        build();
+        build(f);
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
-        // Change center
-        char enter = evt.getKeyChar();
-        if (!(Character.isDigit(enter))) {
-            evt.consume();
-        }
-
-    }//GEN-LAST:event_jTextField1KeyTyped
-
-    private void jt_center_yKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_yKeyTyped
-
-    }//GEN-LAST:event_jt_center_yKeyTyped
-
-    private void jt_center_yKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_yKeyPressed
-
-    }//GEN-LAST:event_jt_center_yKeyPressed
 
     private void jt_center_yKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_yKeyReleased
         try {
@@ -215,7 +204,7 @@ public class main extends javax.swing.JFrame {
                 int y = Integer.parseInt(jt_center_y.getText());
                 center.setLocation(center.x, y);
                 System.out.println("Center y:" + center.toString());
-                build();
+                build(f);
             }
         } catch (NumberFormatException e) {
         }
@@ -228,44 +217,71 @@ public class main extends javax.swing.JFrame {
             File f_dest = new File(fc.getSelectedFile().getPath() + ".png");
 
             if (f_dest != null) {
-                System.out.println("====>" + f_dest);
-
+                // System.out.println("====>" + f_dest);
                 Transform.prepare(f, center, true, f_dest);
                 JOptionPane.showMessageDialog(null,
                         "El archivo se guardó exitosamente en: \n " + f_dest,
                         "Información",
                         JOptionPane.INFORMATION_MESSAGE
                 );
+                clean();
             }
-
-            // TODO add your handling code here:
         } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_saveActionPerformed
 
-    public void build() {
-        if (f != null) {
-            try {
-                // System.out.println("=>" + f.getPath());
-                label_photo.setIcon(new ImageIcon(f.getPath()));
-
-                // Process
-                Data d = Transform.prepare(f, center, false, null);
-                Image img2 = d.output;
-                center = d.center;
-
-                jTextField1.setEnabled(true);
-                jTextField1.setText((int) center.getX() + "");
-                jt_center_y.setEnabled(true);
-                jt_center_y.setText((int) center.getY() + "");
-
-                label_photo_res.setIcon(new ImageIcon(img2));
-
-            } catch (IOException ex) {
-                Logger.getLogger(main.class
-                        .getName()).log(Level.SEVERE, null, ex);
+    private void jt_center_xKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_xKeyReleased
+        // TODO add your handling code here:
+        try {
+            if (center != null) {
+                int x = Integer.parseInt(jt_center_x.getText());
+                center.setLocation(x, center.y);
+                System.out.println("Center x:" + center.toString());
+                build(f);
             }
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_jt_center_xKeyReleased
+
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null,
+                "Departamento de Educación a distancia"
+                + "\nJulian David MR <jul.mora@udla.edu.co>"
+                + "\n2018",
+                "Información",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }//GEN-LAST:event_jPanel1MouseClicked
+
+    public void clean() {
+        center = null;
+        f = null;
+        jt_center_x.setEnabled(false);
+        jt_center_y.setEnabled(false);
+    }
+
+    public void build(File file) {
+        try {
+            // Process
+            Data d = Transform.prepare(file, center, false, null);
+            // System.out.println("=>" + f.getPath());
+            Image img1 = d.input.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+            label_photo.setIcon(new ImageIcon(img1));
+
+            Image img2 = d.output.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+            label_photo_res.setIcon(new ImageIcon(img2));
+
+            center = d.center;
+
+            jt_center_x.setEnabled(true);
+            jt_center_x.setText((int) center.getX() + "");
+            jt_center_y.setEnabled(true);
+            jt_center_y.setText((int) center.getY() + "");
+        } catch (IOException ex) {
+            Logger.getLogger(main.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -306,13 +322,12 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jt_center_x;
     private javax.swing.JTextField jt_center_y;
     private javax.swing.JLabel label_photo;
     private javax.swing.JLabel label_photo_res;
     private javax.swing.JButton save;
-    private javax.swing.JTextField tf_width;
-    private javax.swing.JTextField tf_width1;
     // End of variables declaration//GEN-END:variables
 }
