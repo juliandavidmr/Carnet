@@ -29,6 +29,7 @@ public class main extends javax.swing.JFrame {
 
     File f;
     private Point center;
+    int radio;
     boolean reset;
 
     /**
@@ -37,16 +38,33 @@ public class main extends javax.swing.JFrame {
     public main() {
         initComponents();
 
+        jt_radio.setText(Config.MIN_RADIUS + "");
+        jLabel_radio.setText(jLabel_radio.getText() + " (min " + Config.MIN_RADIUS + "px)");
+
         setDropTarget(new DropTarget() {
             @Override
             public synchronized void drop(DropTargetDropEvent evt) {
                 try {
-                    evt.acceptDrop(DnDConstants.ACTION_COPY);
+                    evt.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
                     List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
                     if (droppedFiles.size() > 0) {
                         clean();
-                        f = droppedFiles.get(0);
-                        build(f);
+                        f = null;
+                        for (File droppedFile : droppedFiles) {
+                            if (droppedFile != null && isValidExtension(droppedFile)) {
+                                f = droppedFile;
+                                build(f);
+                                break;
+                            }
+                        }
+                        if (f == null) {
+                            JOptionPane.showMessageDialog(null,
+                                    "El archivo seleccionado no se pudo procesar"
+                                    + "\nPor favor seleccione una imagen válida",
+                                    "Error al procesar archivo",
+                                    JOptionPane.ERROR_MESSAGE
+                            );
+                        }
                     }
                 } catch (UnsupportedFlavorException | IOException ex) {
                 }
@@ -64,59 +82,27 @@ public class main extends javax.swing.JFrame {
     private void initComponents() {
 
         jFileChooser1 = new javax.swing.JFileChooser();
-        jButton1 = new javax.swing.JButton();
         label_photo = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         label_photo_res = new javax.swing.JLabel();
-        jt_center_x = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jt_center_y = new javax.swing.JTextField();
-        save = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        save = new javax.swing.JButton();
+        jt_radio = new javax.swing.JTextField();
+        jLabel_radio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Foto carnet");
         setResizable(false);
-
-        jButton1.setText("Seleccionar foto");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         label_photo.setMaximumSize(new java.awt.Dimension(300, 300));
         label_photo.setMinimumSize(new java.awt.Dimension(400, 400));
 
         label_photo_res.setMaximumSize(new java.awt.Dimension(300, 300));
         label_photo_res.setMinimumSize(new java.awt.Dimension(400, 400));
-
-        jt_center_x.setText("0");
-        jt_center_x.setEnabled(false);
-        jt_center_x.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jt_center_xKeyReleased(evt);
-            }
-        });
-
-        jLabel3.setText("Centro (x, y)");
-
-        jt_center_y.setText("0");
-        jt_center_y.setEnabled(false);
-        jt_center_y.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jt_center_yKeyReleased(evt);
-            }
-        });
-
-        save.setText("Guardar");
-        save.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveActionPerformed(evt);
-            }
-        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Por"));
         jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -139,68 +125,102 @@ public class main extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2))
+        );
+
+        jButton1.setText("Seleccionar foto");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        save.setText("Guardar");
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+
+        jt_radio.setText("0");
+        jt_radio.setEnabled(false);
+        jt_radio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jt_radioActionPerformed(evt);
+            }
+        });
+        jt_radio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jt_radioKeyReleased(evt);
+            }
+        });
+
+        jLabel_radio.setText("Radio");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel_radio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jt_radio, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(save)
+                    .addComponent(jLabel_radio)
+                    .addComponent(jt_radio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jt_center_x, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jt_center_y)
-                            .addComponent(save, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(label_photo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(label_photo_res, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 5, Short.MAX_VALUE))))
+                        .addComponent(label_photo_res, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(label_photo_res, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                     .addComponent(label_photo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(save))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jt_center_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jt_center_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -216,34 +236,9 @@ public class main extends javax.swing.JFrame {
         build(f);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jt_center_yKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_yKeyReleased
-        try {
-            if (center != null) {
-                int y = Integer.parseInt(jt_center_y.getText());
-                center.setLocation(center.x, y);
-                System.out.println("Center y:" + center.toString());
-                build(f);
-            }
-        } catch (NumberFormatException e) {
-        }
-    }//GEN-LAST:event_jt_center_yKeyReleased
-
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
         save();
     }//GEN-LAST:event_saveActionPerformed
-
-    private void jt_center_xKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_center_xKeyReleased
-        // TODO add your handling code here:
-        try {
-            if (center != null) {
-                int x = Integer.parseInt(jt_center_x.getText());
-                center.setLocation(x, center.y);
-                System.out.println("Center x:" + center.toString());
-                build(f);
-            }
-        } catch (NumberFormatException e) {
-        }
-    }//GEN-LAST:event_jt_center_xKeyReleased
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
         // TODO add your handling code here:
@@ -256,54 +251,101 @@ public class main extends javax.swing.JFrame {
         );
     }//GEN-LAST:event_jPanel1MouseClicked
 
+    private void jt_radioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jt_radioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jt_radioActionPerformed
+
+    private void jt_radioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_radioKeyReleased
+        // TODO add your handling code here:
+        try {
+            if (center != null) {
+                radio = Integer.parseInt(jt_radio.getText());
+                System.out.println("Radio:" + radio);
+                build(f);
+            }
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_jt_radioKeyReleased
+
     public void clean() {
         center = null;
         f = null;
-        jt_center_x.setEnabled(false);
-        jt_center_y.setEnabled(false);
+        jt_radio.setEnabled(false);
     }
 
     public void save() {
         try {
             JFileChooser fc = new JFileChooser();
-            fc.showSaveDialog(this);
-            File f_dest = new File(fc.getSelectedFile().getPath() + ".png");
+            int out = fc.showSaveDialog(this);
 
-            if (f_dest != null) {
-                // System.out.println("====>" + f_dest);
-                Transform.prepare(f, center, true, f_dest);
-                JOptionPane.showMessageDialog(null,
-                        "El archivo se guardó exitosamente en: \n " + f_dest,
-                        "Información",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-                clean();
+            if (out == JFileChooser.APPROVE_OPTION) {
+                File f_dest = new File(fc.getSelectedFile().getPath() + ".png");
+
+                if (f_dest != null) {
+                    Transform.prepare(f, center, radio, true, f_dest);
+                    JOptionPane.showMessageDialog(null,
+                            "El archivo se guardó exitosamente en: \n " + f_dest,
+                            "Información",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    clean();
+                }
             }
         } catch (IOException ex) {
             // Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    public boolean isValidExtension(File file) {
+        if (file == null) {
+            return false;
+        }
+        String ext, path = file.getPath();
+
+        int i = path.lastIndexOf('.');
+        if (i > 0) {
+            ext = path.substring(i + 1);
+
+            switch (ext) {
+                case "jpg":
+                case "png":
+                case "jpeg":
+                case "JPG":
+                case "JPEG":
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public void build(File file) {
-        try {
-            // Process
-            Data d = Transform.prepare(file, center, false, null);
-            // System.out.println("=>" + f.getPath());
-            Image img1 = d.input.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
-            label_photo.setIcon(new ImageIcon(img1));
+        if (isValidExtension(file)) {
+            try {
+                // Process
+                Data d = Transform.prepare(file, center, radio, false, null);
+                // System.out.println("=>" + f.getPath());
+                Image img1 = d.input.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+                label_photo.setIcon(new ImageIcon(img1));
 
-            Image img2 = d.output.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
-            label_photo_res.setIcon(new ImageIcon(img2));
+                Image img2 = d.output.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+                label_photo_res.setIcon(new ImageIcon(img2));
 
-            center = d.center;
+                center = d.center;
 
-            jt_center_x.setEnabled(true);
-            jt_center_x.setText((int) center.getX() + "");
-            jt_center_y.setEnabled(true);
-            jt_center_y.setText((int) center.getY() + "");
-        } catch (IOException ex) {
-            Logger.getLogger(main.class
-                    .getName()).log(Level.SEVERE, null, ex);
+                jt_radio.setEnabled(true);
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "El archivo seleccionado no pudo abrirse."
+                    + "\nDebe seleccionar imagenes con alguno de los siguientes formatos:"
+                    + "\n- jpg"
+                    + "\n- png"
+                    + "\n- jpeg",
+                    "Error al abrir imagen",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
@@ -343,11 +385,11 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel_radio;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jt_center_x;
-    private javax.swing.JTextField jt_center_y;
+    private javax.swing.JTextField jt_radio;
     private javax.swing.JLabel label_photo;
     private javax.swing.JLabel label_photo_res;
     private javax.swing.JButton save;

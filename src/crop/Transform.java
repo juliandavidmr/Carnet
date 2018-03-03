@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package crop;
 
 import java.awt.Graphics2D;
@@ -24,7 +19,7 @@ import javax.imageio.ImageIO;
  */
 public class Transform {
 
-    public static Data prepare(final File f, Point center, boolean save, File dest) throws IOException {
+    public static Data prepare(final File f, Point center, int radio, boolean save, File dest) throws IOException {
         BufferedImage img;
         //read image
         try {
@@ -33,24 +28,22 @@ public class Transform {
             int width = img.getWidth();
             int height = img.getHeight();
 
-            if (center == null) {
-                center = getCenter(width, height);
-            }
+            center = center != null ? center : getCenter(width, height);
+            radio = radio > Config.MIN_RADIUS ? radio : getRadius(width, height);
 
             // System.out.println("W:" + width + "\tH:" + height);
-
-            Circle circle = new Circle(center, getRadius(width, height));
-            Image img2 = processing(img, new java.awt.Color(200, 200, 200), circle);
+            Shape circle = new Shape(center, radio);
+            Image img2 = processing(img, new java.awt.Color(210, 210, 210), circle);
 
             //write image
             if (save) {
-                try {                    
+                try {
                     ImageIO.write(toBufferedImage(img2), "png", dest);
                 } catch (IOException e) {
                     System.err.println(e);
                 }
             }
-            
+
             return new Data(img, img2, center);
         } catch (IOException e) {
             System.out.println(e);
@@ -72,7 +65,7 @@ public class Transform {
 
             System.out.println("W:" + width + "\tH:" + height);
 
-            Circle circle = new Circle(getCenter(width, height), getRadius(width, height));
+            Shape circle = new Shape(getCenter(width, height), getRadius(width, height));
             Image img2 = processing(img, new java.awt.Color(200, 200, 200), circle);
 
             //write image
@@ -135,7 +128,7 @@ public class Transform {
      * este seran eliminados.
      * @return
      */
-    public static Image processing(Image im, final java.awt.Color min_color, Circle circle) {
+    public static Image processing(Image im, final java.awt.Color min_color, Shape circle) {
         ImageFilter filter = new RGBImageFilter() {
             // the color we are looking for... Alpha bits are set to opaque
             public int markerRGB = min_color.getRGB() | 0xFF000000;
