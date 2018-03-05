@@ -28,7 +28,10 @@ public class Transform {
             int width = img.getWidth();
             int height = img.getHeight();
 
-            center = center != null ? center : getCenter(width, height);
+            if (center.x <= 0 && center.y <= 0) {
+                center = getCenter(width, height);
+            }
+
             radio = radio > Config.MIN_RADIUS ? radio : getRadius(width, height);
 
             // System.out.println("W:" + width + "\tH:" + height);
@@ -38,13 +41,13 @@ public class Transform {
             //write image
             if (save) {
                 try {
-                    ImageIO.write(toBufferedImage(img2), "png", dest);
+                    ImageIO.write(toBufferedImage(img2), Config.FORMAT_IMAGE, dest);
                 } catch (IOException e) {
                     System.err.println(e);
                 }
             }
 
-            return new Data(img, img2, center);
+            return new Data(img, img2, center, radio);
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -126,6 +129,7 @@ public class Transform {
      * @param im
      * @param min_color Color minimo a detectar. Todos los colores por encima de
      * este seran eliminados.
+     * @param circle
      * @return
      */
     public static Image processing(Image im, final java.awt.Color min_color, Shape circle) {

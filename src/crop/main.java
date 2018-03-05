@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
 
 /**
  *
@@ -28,7 +29,7 @@ import javax.swing.JOptionPane;
 public class main extends javax.swing.JFrame {
 
     File f;
-    private Point center;
+    private Point center = new Point(Config.PICTURE_CENTER_X, Config.PICTURE_CENTER_Y);
     int radio;
     boolean reset;
 
@@ -38,7 +39,6 @@ public class main extends javax.swing.JFrame {
     public main() {
         initComponents();
 
-        jt_radio.setText(Config.MIN_RADIUS + "");
         jLabel_radio.setText(jLabel_radio.getText() + " (min " + Config.MIN_RADIUS + "px)");
 
         setDropTarget(new DropTarget() {
@@ -89,10 +89,18 @@ public class main extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         save = new javax.swing.JButton();
-        jt_radio = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jSlider1 = new javax.swing.JSlider();
         jLabel_radio = new javax.swing.JLabel();
+        jSlider2 = new javax.swing.JSlider();
+        jLabel3 = new javax.swing.JLabel();
+        jSlider3 = new javax.swing.JSlider();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel_ancho = new javax.swing.JLabel();
+        jLabel_alto = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel_radio2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Foto carnet");
@@ -126,7 +134,7 @@ public class main extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addContainerGap())
         );
@@ -137,13 +145,6 @@ public class main extends javax.swing.JFrame {
                 .addComponent(jLabel2))
         );
 
-        jButton1.setText("Seleccionar foto");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         save.setText("Guardar");
         save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,62 +152,135 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        jt_radio.setText("0");
-        jt_radio.setEnabled(false);
-        jt_radio.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Seleccionar foto");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jt_radioActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
-        jt_radio.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jt_radioKeyReleased(evt);
+
+        jSlider1.setMaximum(400);
+        jSlider1.setMinimum(10);
+        jSlider1.setPaintLabels(true);
+        jSlider1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
             }
         });
 
         jLabel_radio.setText("Radio");
+
+        jSlider2.setMaximum(300);
+        jSlider2.setMinimum(20);
+        jSlider2.setOrientation(javax.swing.JSlider.VERTICAL);
+        jSlider2.setToolTipText("Definir posición en Y");
+        jSlider2.setInverted(true);
+        jSlider2.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider2StateChanged(evt);
+            }
+        });
+
+        jLabel3.setText("Ancho:");
+
+        jSlider3.setToolTipText("Definir centro en posición en X");
+        jSlider3.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider3StateChanged(evt);
+            }
+        });
+
+        jLabel4.setText("Alto:");
+
+        jLabel_ancho.setText("0px");
+
+        jLabel_alto.setText("0px");
+
+        jLabel5.setText("Radio:");
+
+        jLabel_radio2.setText("0px");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel_radio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jt_radio, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel_radio))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSlider3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel_ancho)
+                            .addComponent(jLabel_alto)
+                            .addComponent(jLabel_radio2))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(save)
-                    .addComponent(jLabel_radio)
-                    .addComponent(jt_radio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel_radio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jSlider3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel_ancho))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel_alto))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel_radio2)))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(label_photo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(label_photo_res, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,10 +290,10 @@ public class main extends javax.swing.JFrame {
                     .addComponent(label_photo_res, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                     .addComponent(label_photo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -251,26 +325,53 @@ public class main extends javax.swing.JFrame {
         );
     }//GEN-LAST:event_jPanel1MouseClicked
 
-    private void jt_radioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jt_radioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jt_radioActionPerformed
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        // Radio de la foto, elipse
+        int r = getValue(evt);
+        if (r != 0) {
+            radio = r;
+            System.out.println("Radio:" + radio);
+            build(f);
 
-    private void jt_radioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jt_radioKeyReleased
-        // TODO add your handling code here:
-        try {
-            if (center != null) {
-                radio = Integer.parseInt(jt_radio.getText());
-                System.out.println("Radio:" + radio);
-                build(f);
-            }
-        } catch (NumberFormatException e) {
+            jLabel_radio2.setText(r + "px");
         }
-    }//GEN-LAST:event_jt_radioKeyReleased
+    }//GEN-LAST:event_jSlider1StateChanged
+
+    private void jSlider2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider2StateChanged
+        // Mover centro en Y
+        int y = getValue(evt);
+        if (y != 0) {
+            center = new Point();
+            center.y = y;
+            System.out.println("Y:" + center.y);
+            build(f);
+            jLabel_alto.setText(y + "px");
+        }
+    }//GEN-LAST:event_jSlider2StateChanged
+
+    private void jSlider3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider3StateChanged
+        // Mover centro en X
+        int x = getValue(evt);
+        if (x != 0) {
+            center = new Point();
+            center.x = x;
+            System.out.println("Y:" + center.x);
+            build(f);
+            jLabel_ancho.setText(x + "px");
+        }
+    }//GEN-LAST:event_jSlider3StateChanged
+
+    public int getValue(javax.swing.event.ChangeEvent evt) {
+        JSlider source = (JSlider) evt.getSource();
+        if (!source.getValueIsAdjusting()) {
+            return (int) ((JSlider) evt.getSource()).getValue();
+        }
+        return 0;
+    }
 
     public void clean() {
-        center = null;
+        center = new Point(Config.PICTURE_CENTER_X, Config.PICTURE_CENTER_Y);
         f = null;
-        jt_radio.setEnabled(false);
     }
 
     public void save() {
@@ -279,7 +380,7 @@ public class main extends javax.swing.JFrame {
             int out = fc.showSaveDialog(this);
 
             if (out == JFileChooser.APPROVE_OPTION) {
-                File f_dest = new File(fc.getSelectedFile().getPath() + ".png");
+                File f_dest = new File(fc.getSelectedFile().getPath() + "." + Config.FORMAT_IMAGE);
 
                 if (f_dest != null) {
                     Transform.prepare(f, center, radio, true, f_dest);
@@ -318,21 +419,37 @@ public class main extends javax.swing.JFrame {
         return false;
     }
 
-    public void build(File file) {
-        if (isValidExtension(file)) {
+    public Data build(File file) {
+        if (file == null) {
+            System.err.println("Archivo sin seleccionar");
+        } else if (isValidExtension(file)) {
             try {
                 // Process
+                System.out.println("Centro:" + center);
                 Data d = Transform.prepare(file, center, radio, false, null);
                 // System.out.println("=>" + f.getPath());
-                Image img1 = d.input.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+                Image img1 = d.input.getScaledInstance(
+                        Config.PICTURE_WIDTH,
+                        Config.PICTURE_HEIGHT,
+                        Image.SCALE_DEFAULT
+                );
                 label_photo.setIcon(new ImageIcon(img1));
 
-                Image img2 = d.output.getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+                Image img2 = d.output.getScaledInstance(
+                        Config.PICTURE_WIDTH,
+                        Config.PICTURE_HEIGHT,
+                        Image.SCALE_DEFAULT
+                );
+
                 label_photo_res.setIcon(new ImageIcon(img2));
 
                 center = d.center;
+                radio = d.radius;
 
-                jt_radio.setEnabled(true);
+                jLabel_radio2.setText(d.radius + "px");
+                jLabel_ancho.setText(center.x + "px");
+                jLabel_alto.setText(center.y + "px");
+                return d;
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -347,6 +464,7 @@ public class main extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+        return null;
     }
 
     /**
@@ -385,11 +503,19 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel_alto;
+    private javax.swing.JLabel jLabel_ancho;
     private javax.swing.JLabel jLabel_radio;
+    private javax.swing.JLabel jLabel_radio2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jt_radio;
+    private javax.swing.JSlider jSlider1;
+    private javax.swing.JSlider jSlider2;
+    private javax.swing.JSlider jSlider3;
     private javax.swing.JLabel label_photo;
     private javax.swing.JLabel label_photo_res;
     private javax.swing.JButton save;

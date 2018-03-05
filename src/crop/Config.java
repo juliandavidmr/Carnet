@@ -14,6 +14,11 @@ public class Config {
     public static double RESIZE_HEIGHT = 2.3d;
     public static final int MIN_RADIUS = 100;
     
-    public static final int PICTURE_WIDTH = 300;
+    public static final int PICTURE_WIDTH = 280;
     public static final int PICTURE_HEIGHT = 400;
+    
+    public static final int PICTURE_CENTER_X = 152;
+    public static final int PICTURE_CENTER_Y = 222;
+    
+    public static final String FORMAT_IMAGE = "png";
 }

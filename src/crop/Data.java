@@ -16,11 +16,13 @@ public class Data {
 
     Image input, output;
     Point center;
+    int radius;
 
-    public Data(Image input, Image output, Point center) {
+    public Data(Image input, Image output, Point center, int radius) {
         this.input = input;
         this.output = output;
         this.center = center;
+        this.radius = radius;
     }
 
 }
