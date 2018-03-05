@@ -14,6 +14,7 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,7 @@ import javax.swing.JSlider;
 public class main extends javax.swing.JFrame {
 
     File f;
-    private Point center = new Point(Config.PICTURE_CENTER_X, Config.PICTURE_CENTER_Y);
+    private Point center;
     int radio;
     boolean reset;
 
@@ -40,6 +41,10 @@ public class main extends javax.swing.JFrame {
         initComponents();
 
         jLabel_radio.setText(jLabel_radio.getText() + " (min " + Config.MIN_RADIUS + "px)");
+        center = new Point(Config.DEFAULT_CENTER_X, Config.DEFAULT_CENTER_Y);
+        jSlider_centerx.setValue(Config.DEFAULT_CENTER_X);
+        jSlider_centery.setValue(Config.DEFAULT_CENTER_Y);
+        jSlider_radius.setValue(Config.DEFAULT_CENTER_RADIUS);
 
         setDropTarget(new DropTarget() {
             @Override
@@ -48,7 +53,6 @@ public class main extends javax.swing.JFrame {
                     evt.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
                     List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
                     if (droppedFiles.size() > 0) {
-                        clean();
                         f = null;
                         for (File droppedFile : droppedFiles) {
                             if (droppedFile != null && isValidExtension(droppedFile)) {
@@ -91,11 +95,11 @@ public class main extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         save = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jSlider1 = new javax.swing.JSlider();
+        jSlider_radius = new javax.swing.JSlider();
         jLabel_radio = new javax.swing.JLabel();
-        jSlider2 = new javax.swing.JSlider();
+        jSlider_centery = new javax.swing.JSlider();
         jLabel3 = new javax.swing.JLabel();
-        jSlider3 = new javax.swing.JSlider();
+        jSlider_centerx = new javax.swing.JSlider();
         jLabel4 = new javax.swing.JLabel();
         jLabel_ancho = new javax.swing.JLabel();
         jLabel_alto = new javax.swing.JLabel();
@@ -134,7 +138,7 @@ public class main extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addContainerGap())
         );
@@ -159,39 +163,38 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        jSlider1.setMaximum(400);
-        jSlider1.setMinimum(10);
-        jSlider1.setPaintLabels(true);
-        jSlider1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+        jSlider_radius.setMaximum(400);
+        jSlider_radius.setMinimum(10);
+        jSlider_radius.setPaintLabels(true);
+        jSlider_radius.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jSlider_radius.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSlider1StateChanged(evt);
+                jSlider_radiusStateChanged(evt);
             }
         });
 
         jLabel_radio.setText("Radio");
 
-        jSlider2.setMaximum(300);
-        jSlider2.setMinimum(20);
-        jSlider2.setOrientation(javax.swing.JSlider.VERTICAL);
-        jSlider2.setToolTipText("Definir posición en Y");
-        jSlider2.setInverted(true);
-        jSlider2.addChangeListener(new javax.swing.event.ChangeListener() {
+        jSlider_centery.setMaximum(200);
+        jSlider_centery.setOrientation(javax.swing.JSlider.VERTICAL);
+        jSlider_centery.setToolTipText("Definir posición en Y");
+        jSlider_centery.setInverted(true);
+        jSlider_centery.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSlider2StateChanged(evt);
+                jSlider_centeryStateChanged(evt);
             }
         });
 
-        jLabel3.setText("Ancho:");
+        jLabel3.setText("Centro (X):");
 
-        jSlider3.setToolTipText("Definir centro en posición en X");
-        jSlider3.addChangeListener(new javax.swing.event.ChangeListener() {
+        jSlider_centerx.setToolTipText("Definir centro en posición en X");
+        jSlider_centerx.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSlider3StateChanged(evt);
+                jSlider_centerxStateChanged(evt);
             }
         });
 
-        jLabel4.setText("Alto:");
+        jLabel4.setText("Centro (Y):");
 
         jLabel_ancho.setText("0px");
 
@@ -206,22 +209,18 @@ public class main extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel_radio))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSlider_radius, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSlider_centery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSlider3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -233,11 +232,14 @@ public class main extends javax.swing.JFrame {
                             .addComponent(jLabel_ancho)
                             .addComponent(jLabel_alto)
                             .addComponent(jLabel_radio2))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSlider_centerx, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jSlider_centery, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,10 +250,10 @@ public class main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel_radio)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSlider_radius, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jSlider3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSlider_centerx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -276,9 +278,11 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(label_photo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(label_photo_res, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -315,7 +319,7 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_saveActionPerformed
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
-        // TODO add your handling code here:
+        // 
         JOptionPane.showMessageDialog(null,
                 "Departamento de Educación a distancia"
                 + "\nJulian David MR <jul.mora@udla.edu.co>"
@@ -325,7 +329,7 @@ public class main extends javax.swing.JFrame {
         );
     }//GEN-LAST:event_jPanel1MouseClicked
 
-    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+    private void jSlider_radiusStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider_radiusStateChanged
         // Radio de la foto, elipse
         int r = getValue(evt);
         if (r != 0) {
@@ -335,9 +339,9 @@ public class main extends javax.swing.JFrame {
 
             jLabel_radio2.setText(r + "px");
         }
-    }//GEN-LAST:event_jSlider1StateChanged
+    }//GEN-LAST:event_jSlider_radiusStateChanged
 
-    private void jSlider2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider2StateChanged
+    private void jSlider_centeryStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider_centeryStateChanged
         // Mover centro en Y
         int y = getValue(evt);
         if (y != 0) {
@@ -347,9 +351,9 @@ public class main extends javax.swing.JFrame {
             build(f);
             jLabel_alto.setText(y + "px");
         }
-    }//GEN-LAST:event_jSlider2StateChanged
+    }//GEN-LAST:event_jSlider_centeryStateChanged
 
-    private void jSlider3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider3StateChanged
+    private void jSlider_centerxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider_centerxStateChanged
         // Mover centro en X
         int x = getValue(evt);
         if (x != 0) {
@@ -359,7 +363,7 @@ public class main extends javax.swing.JFrame {
             build(f);
             jLabel_ancho.setText(x + "px");
         }
-    }//GEN-LAST:event_jSlider3StateChanged
+    }//GEN-LAST:event_jSlider_centerxStateChanged
 
     public int getValue(javax.swing.event.ChangeEvent evt) {
         JSlider source = (JSlider) evt.getSource();
@@ -369,32 +373,50 @@ public class main extends javax.swing.JFrame {
         return 0;
     }
 
-    public void clean() {
-        center = new Point(Config.PICTURE_CENTER_X, Config.PICTURE_CENTER_Y);
-        f = null;
+    public void save() {
+        if (f != null) {
+            try {
+                JFileChooser fc = new JFileChooser();
+                fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                fc.setCurrentDirectory(new File(
+                        System.getProperty("user.home")
+                        + System.getProperty("file.separator") + "Desktop"));
+                String name = removeExtension(f.getName());
+                name += "_" + (new Date().toGMTString()).replaceAll(" ", "_").replaceAll(":", "_");
+                fc.setSelectedFile(new File(name));
+
+                int out = fc.showSaveDialog(this);
+
+                if (out == JFileChooser.APPROVE_OPTION) {
+                    File f_dest = new File(fc.getSelectedFile().getPath() + "." + Config.FORMAT_IMAGE);
+
+                    if (f_dest != null) {
+                        Transform.prepare(f, center, radio, true, f_dest);
+                        JOptionPane.showMessageDialog(null,
+                                "El archivo se guardó exitosamente en: \n " + f_dest,
+                                "Información",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+                }
+            } catch (IOException ex) {
+                // Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "No se ha cargado una imagen",
+                    "Información",
+                    JOptionPane.QUESTION_MESSAGE
+            );
+        }
     }
 
-    public void save() {
-        try {
-            JFileChooser fc = new JFileChooser();
-            int out = fc.showSaveDialog(this);
-
-            if (out == JFileChooser.APPROVE_OPTION) {
-                File f_dest = new File(fc.getSelectedFile().getPath() + "." + Config.FORMAT_IMAGE);
-
-                if (f_dest != null) {
-                    Transform.prepare(f, center, radio, true, f_dest);
-                    JOptionPane.showMessageDialog(null,
-                            "El archivo se guardó exitosamente en: \n " + f_dest,
-                            "Información",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-                    clean();
-                }
-            }
-        } catch (IOException ex) {
-            // Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+    public String removeExtension(String val) {
+        int i = val.lastIndexOf('.');
+        if (i > 0) {
+            return val.substring(0, i);
         }
+        return val;
     }
 
     public boolean isValidExtension(File file) {
@@ -425,7 +447,7 @@ public class main extends javax.swing.JFrame {
         } else if (isValidExtension(file)) {
             try {
                 // Process
-                System.out.println("Centro:" + center);
+                System.out.println("Centro: " + center);
                 Data d = Transform.prepare(file, center, radio, false, null);
                 // System.out.println("=>" + f.getPath());
                 Image img1 = d.input.getScaledInstance(
@@ -513,9 +535,9 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSlider jSlider1;
-    private javax.swing.JSlider jSlider2;
-    private javax.swing.JSlider jSlider3;
+    private javax.swing.JSlider jSlider_centerx;
+    private javax.swing.JSlider jSlider_centery;
+    private javax.swing.JSlider jSlider_radius;
     private javax.swing.JLabel label_photo;
     private javax.swing.JLabel label_photo_res;
     private javax.swing.JButton save;

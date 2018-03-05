@@ -54,6 +54,7 @@ public class Transform {
         return null;
     }
 
+    /*
     public static void main(String args[]) throws IOException {
         BufferedImage img;
         File f;
@@ -81,7 +82,7 @@ public class Transform {
         } catch (IOException e) {
             System.out.println(e);
         }
-    }
+    }*/
 
     public static BufferedImage toBufferedImage(Image img) {
         if (img instanceof BufferedImage) {
