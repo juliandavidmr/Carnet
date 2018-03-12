@@ -20,6 +20,8 @@ import javax.imageio.ImageIO;
 public class Transform {
 
     public static Data prepare(final File f, Point center, int radio, boolean save, File dest) throws IOException {
+        System.out.println("Estado check: " + RenderConfig.ELLIPSE_MODE);
+        
         BufferedImage img;
         //read image
         try {
@@ -144,7 +146,7 @@ public class Transform {
                 if ((temp.getRed() >= min_color.getRed()
                         && temp.getBlue() >= min_color.getBlue()
                         && temp.getGreen() >= min_color.getGreen())
-                        || !circle.contains(new Point(x, y))) {
+                        || (!circle.contains(new Point(x, y)) && RenderConfig.ELLIPSE_MODE)) {
                     return 0x00FFFFFF & rgb;
                 }
                 return rgb;

@@ -12,12 +12,14 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -27,7 +29,7 @@ import javax.swing.JSlider;
  *
  * @author jul.mora
  */
-public class main extends javax.swing.JFrame {
+public final class main extends javax.swing.JFrame {
 
     File f;
     private Point center;
@@ -45,7 +47,14 @@ public class main extends javax.swing.JFrame {
         jSlider_centerx.setValue(Config.DEFAULT_CENTER_X);
         jSlider_centery.setValue(Config.DEFAULT_CENTER_Y);
         jSlider_radius.setValue(Config.DEFAULT_CENTER_RADIUS);
-
+        
+        //Initialize variables
+        jCheckBoxMenuItem_ellipse_mode.setSelected(RenderConfig.ELLIPSE_MODE);
+        
+        configureDrop();
+    }
+    
+    void configureDrop() {
         setDropTarget(new DropTarget() {
             @Override
             public synchronized void drop(DropTargetDropEvent evt) {
@@ -105,6 +114,11 @@ public class main extends javax.swing.JFrame {
         jLabel_alto = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel_radio2 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu_close = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu_ellipse_mode = new javax.swing.JMenu();
+        jCheckBoxMenuItem_ellipse_mode = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Foto carnet");
@@ -268,6 +282,33 @@ public class main extends javax.swing.JFrame {
                             .addComponent(jLabel_radio2)))))
         );
 
+        jMenu_close.setText("Archivo");
+
+        jMenuItem1.setText("Salir");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu_close.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu_close);
+
+        jMenu_ellipse_mode.setText("Recorte");
+
+        jCheckBoxMenuItem_ellipse_mode.setSelected(true);
+        jCheckBoxMenuItem_ellipse_mode.setText("Modo elipse");
+        jCheckBoxMenuItem_ellipse_mode.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxMenuItem_ellipse_modeItemStateChanged(evt);
+            }
+        });
+        jMenu_ellipse_mode.add(jCheckBoxMenuItem_ellipse_mode);
+
+        jMenuBar1.add(jMenu_ellipse_mode);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -364,6 +405,15 @@ public class main extends javax.swing.JFrame {
             jLabel_ancho.setText(x + "px");
         }
     }//GEN-LAST:event_jSlider_centerxStateChanged
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jCheckBoxMenuItem_ellipse_modeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_ellipse_modeItemStateChanged
+        RenderConfig.ELLIPSE_MODE = evt.getStateChange() == ItemEvent.SELECTED;
+        build(f);
+    }//GEN-LAST:event_jCheckBoxMenuItem_ellipse_modeItemStateChanged
 
     public int getValue(javax.swing.event.ChangeEvent evt) {
         JSlider source = (JSlider) evt.getSource();
@@ -522,6 +572,7 @@ public class main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem_ellipse_mode;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -532,6 +583,10 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_ancho;
     private javax.swing.JLabel jLabel_radio;
     private javax.swing.JLabel jLabel_radio2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenu jMenu_close;
+    private javax.swing.JMenu jMenu_ellipse_mode;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
